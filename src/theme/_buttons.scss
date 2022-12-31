@@ -1,0 +1,87 @@
+@import './config';
+@import './utils';
+
+@mixin btn($background-color, $color, $bold) {
+    background-color: $background-color;
+    color: $color;
+    border: solid $primary-color;
+    border-radius: 13px;
+    padding: 7px 10px;
+
+    @if($bold =='true') {
+        font-weight: bold;
+    }
+}
+
+.btn {
+    @include btn(black, white, 'true');
+
+    &.btn-fill {
+        @include btn($background-color: $primary-color,
+            $color: $secondary-color,
+            $bold: 'false');
+
+        &:hover {
+            @include btn($tertiary-color, $primary-color, 'true');
+            box-shadow: $box-shadow;
+        }
+
+        &:disabled {
+            @include btn($tertiary-color, $primary-color, 'true');
+            cursor: no-drop;
+        }
+    }
+
+    &.btn-outline {
+        @include btn($background-color: $secondary-color,
+            $color: $primary-color,
+            $bold: 'false');
+
+        &:hover {
+            @include btn($secondary-color, $tertiary-color, 'true');
+            box-shadow: $box-shadow;
+        }
+    }
+
+    &:hover {
+        @include btn($tertiary-color, $secondary-color, 'true');
+        box-shadow: $box-shadow;
+    }
+
+    &.btn-full-width {
+        width: 100%;
+    }
+}
+
+.form-buttons {
+    @include spaceBetween();
+
+    &.initial {
+        justify-content: flex-end;
+    }
+
+    &.final {
+        justify-content: flex-start;
+    }
+}
+
+.summary-btn {
+    color: $secondary-color;
+    background-color: $primary-color;
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 100px;
+    border: none;
+}
+
+.container-summary{
+    @include end();
+    margin-right:5%;
+    position: fixed;
+    display: flex;
+    bottom: 0;
+    padding-bottom: 2%;
+    justify-content: flex-end;
+    width: 98%;
+}
+

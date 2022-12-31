@@ -1,0 +1,35 @@
+@for $i from 1 to $limit {
+    .p-#{$i}{
+        padding: #{$i*$unit};
+    }
+}
+
+@for $i from 1 to $limit {
+    .py-#{$i}{
+        padding: #{$i*$unit} 0;
+    }
+}
+
+@for $i from 1 to $limit {
+    .px-#{$i}{
+        padding: 0 #{$i*$unit};
+    }
+}
+
+@for $i from 1 to $limit {
+    .ps-#{$i}{
+        padding-left: #{$i*$unit};
+    }
+}
+
+@for $i from 1 to $limit {
+    .pe-#{$i}{
+        padding-right: #{$i*$unit};
+    }
+}
+
+@for $i from 0 to $limit {
+    .pt-#{$i}{
+        padding-top: #{$i*$unit};
+    }
+}

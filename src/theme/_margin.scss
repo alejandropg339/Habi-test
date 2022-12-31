@@ -1,0 +1,23 @@
+@for $i from 1 to $limit {
+    .m-#{$i}{
+        margin: #{$i*$unit};
+    }
+}
+
+@for $i from 1 to $limit {
+    .my-#{$i}{
+        margin: #{$i*$unit} 0;
+    }
+}
+
+@for $i from 1 to $limit {
+    .mb-#{$i}{
+        margin-bottom: #{$i*$unit};
+    }
+}
+
+@for $i from 1 to $limit {
+    .mt-#{$i}{
+        margin-top: #{$i*$unit};
+    }
+}

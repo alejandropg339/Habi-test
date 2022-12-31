@@ -1,0 +1,67 @@
+@mixin spaceBetween {
+    display: flex;
+    justify-content: space-between;
+}
+
+@mixin center {
+    display: flex;
+    justify-content: center;
+}
+
+@mixin end {
+    display: flex;
+    justify-content: end;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+
+    .col {
+        width: 100%;
+    }
+
+    .col-10 {
+        width: 10%;
+    }
+
+    .col-30 {
+        width: 30%;
+    }
+
+    .col-70 {
+        width: 70%;
+    }
+
+    .col-90 {
+        width: 70%;
+    }
+}
+
+.m-auto {
+    margin: 0 auto;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+}
+
+.card-content {
+    padding: 0px 16px;
+}
+
+.card-title {
+    @include spaceBetween();
+    align-items: center;
+    padding: 2px 16px;
+    max-height: 40px;
+}
+
+.inline {
+    display: inline-block;
+}

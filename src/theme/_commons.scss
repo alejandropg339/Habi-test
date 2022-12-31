@@ -1,0 +1,8 @@
+.img-container {
+    @include center();
+}
+
+.preview-img {
+    max-width: 70%;
+    border-radius: 13px;
+}
