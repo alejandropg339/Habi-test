@@ -15,7 +15,7 @@ import { useRef } from 'react'
 import { UploadIcon } from '@primer/octicons-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { incrementStep, initialStateSales, setSalesProperty } from './slices/SalesDataSlice'
-import { RootState } from './sotre/Store'
+import { RootState } from './store/Store'
 
 function App() {
   const formikRef = useRef<any>();

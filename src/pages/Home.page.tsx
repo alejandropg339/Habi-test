@@ -1,6 +1,6 @@
 import { BookIcon, UploadIcon } from '@primer/octicons-react';
 import { Form, Formik } from 'formik';
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import CurrencyInput from 'react-currency-input-field';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card } from '../components/card/Card.component';
@@ -9,41 +9,52 @@ import { CustomInput } from '../components/formInputs/CustomInput.component';
 import { CustomSelect } from '../components/formInputs/CustomSelect.component';
 import { SalesFormInterface } from '../interfaces/SalesForm.inteface';
 import { homeLabels } from '../labels/Home.labels';
-import { decrementStep, incrementStep, setSalesProperty } from '../slices/SalesDataSlice';
-import { RootState } from '../sotre/Store';
+import { decrementStep, incrementStep, keepPath, setSalesProperty } from '../slices/SalesDataSlice';
+import { RootState } from '../store/Store';
 import { useNavigate } from 'react-router-dom';
 import { homeFormValidations } from '../utils/HomeFormValidations';
 import { Modal } from '../components/modal/Modal.component';
 import { setStateModal } from '../slices/ModalSlice';
 import { transformToNumber } from '../utils/CurrencyFormatter';
+import { HomeRoutes } from '../enums/HomeRoutes.enum';
 
 export const Home = () => {
     const formikRef = useRef<any>();
     const dispatch = useDispatch();
     const { salesData, modal } = useSelector((state: RootState) => state);
-    const { step, ...rest } = salesData;
+    const { step, path, ...rest } = salesData;
+    const navigate = useNavigate();
 
-    const onSubmit = (value: SalesFormInterface) => {
-        console.log('values: ', value);
-        dispatch(setSalesProperty({ name: 'fullName', value: value.fullName }));
+    const onSubmit = (formValue: SalesFormInterface) => {
+        //TODO: SOME POST TO BACKEND
+        console.log(formValue)
+        dispatch(setSalesProperty({ name: 'elevator', value: formValue.elevator }));
+        dispatch(setSalesProperty({ name: 'finished', value: true}));
+        navigate(HomeRoutes.SuccessFormSales)
     }
 
     const prevStep = () => {
         dispatch(decrementStep());
+        navigate(-1);
     }
 
-    const keepData = (name: string, value: any) => {
-        if (name !== 'picture') {
-            dispatch(setSalesProperty({ name, value }));
-        } else {
-            localStorage.setItem('picture', value);
+    const keepData = (name: string, value: any, path: string) => {
+        try {
+            if (name !== 'picture') {
+                dispatch(setSalesProperty({ name, value }));
+            } else {
+                localStorage.setItem('picture', value);
+            }
+            dispatch(incrementStep());
+            dispatch(keepPath({path}));
+            navigate(path);
+        } catch (error) {
+            //TODO: MANAGE EXCEPTION
+            console.log(error);            
         }
-        dispatch(incrementStep());
     }
 
     
-
-
 
     return (
         <>
@@ -51,7 +62,6 @@ export const Home = () => {
             <Formik initialValues={rest} onSubmit={onSubmit} validateOnMount={true} innerRef={formikRef} validationSchema={homeFormValidations} >
                 {(formikProps) => (
                     <Form>
-                        <pre>{JSON.stringify(formikProps, null, 2)}</pre>
                         <div className="mt-3">
                             <Card title={homeLabels.stepOneTitle} description={homeLabels.stepOneDescription} completed={!formikProps.errors.fullName} active={step === 0 ? true : false}>
                                 <>
@@ -65,7 +75,7 @@ export const Home = () => {
                                     />
 
                                     <div className='form-buttons initial mt-1 mt-1'>
-                                        <button className="btn btn-fill mb-2 card-btn" type="button" disabled={!!formikProps.errors.fullName} onClick={() => { keepData('fullName', formikProps.values.fullName) }}>Siguiente</button>
+                                        <button className="btn btn-fill mb-2 card-btn" type="button" disabled={!!formikProps.errors.fullName} onClick={() => { keepData('fullName', formikProps.values.fullName, HomeRoutes.Email) }}>Siguiente</button>
                                     </div>
                                 </>
                             </Card>
@@ -89,7 +99,7 @@ export const Home = () => {
 
                                     <div className='form-buttons mt-1'>
                                         <button type="button" className="btn btn-outline mb-2" onClick={prevStep}>Atras</button>
-                                        <button type="button" className="btn btn-fill mb-2" disabled={!!formikProps.errors.email} onClick={() => { keepData('email', formikProps.values.email) }}>Siguiente</button>
+                                        <button type="button" className="btn btn-fill mb-2" disabled={!!formikProps.errors.email} onClick={() => { keepData('email', formikProps.values.email, HomeRoutes.Address) }}>Siguiente</button>
                                     </div>
                                 </>
                             </Card>
@@ -106,7 +116,7 @@ export const Home = () => {
 
                                     <div className='form-buttons mt-1'>
                                         <button type="button" className="btn btn-outline mb-2" onClick={prevStep}>Atras</button>
-                                        <button type="button" className="btn btn-fill mb-2" disabled={!!formikProps.errors.address} onClick={() => { keepData('address', formikProps.values.address) }}>Siguiente</button>
+                                        <button type="button" className="btn btn-fill mb-2" disabled={!!formikProps.errors.address} onClick={() => { keepData('address', formikProps.values.address, HomeRoutes.Floor) }}>Siguiente</button>
                                     </div>
                                 </>
                             </Card>
@@ -123,7 +133,7 @@ export const Home = () => {
 
                                     <div className='form-buttons mt-1'>
                                         <button type="button" className="btn btn-outline mb-2" onClick={prevStep}>Atras</button>
-                                        <button type="button" className="btn btn-fill mb-2" disabled={!!formikProps.errors.floor} onClick={() => { keepData('floor', formikProps.values.floor) }}>Siguiente</button>
+                                        <button type="button" className="btn btn-fill mb-2" disabled={!!formikProps.errors.floor} onClick={() => { keepData('floor', formikProps.values.floor, HomeRoutes.Zones) }}>Siguiente</button>
                                     </div>
                                 </>
                             </Card>
@@ -183,7 +193,7 @@ export const Home = () => {
 
                                     <div className='form-buttons mt-1'>
                                         <button type="button" className="btn btn-outline mb-2" onClick={prevStep}>Atras</button>
-                                        <button type="button" className="btn btn-fill mb-2" onClick={() => { keepData('zones', formikProps.values.zones) }}>Siguiente</button>
+                                        <button type="button" className="btn btn-fill mb-2" onClick={() => { keepData('zones', formikProps.values.zones, HomeRoutes.Parking) }}>Siguiente</button>
                                     </div>
                                 </>
                             </Card>
@@ -214,7 +224,7 @@ export const Home = () => {
 
                                     <div className='form-buttons mt-1'>
                                         <button type="button" className="btn btn-outline mb-2" onClick={prevStep}>Atras</button>
-                                        <button type="button" className="btn btn-fill mb-2" onClick={() => { keepData('parking', formikProps.values.parking) }}>Siguiente</button>
+                                        <button type="button" className="btn btn-fill mb-2" onClick={() => { keepData('parking', formikProps.values.parking, HomeRoutes.Value) }}>Siguiente</button>
                                     </div>
                                 </>
                             </Card>
@@ -234,7 +244,7 @@ export const Home = () => {
 
                                     <div className='form-buttons mt-1'>
                                         <button type="button" className="btn btn-outline mb-2" onClick={prevStep}>Atras</button>
-                                        <button type="button" className="btn btn-fill mb-2" onClick={() => { keepData('value', formikProps.values.value) }} disabled={!!formikProps.errors.value}>Siguiente</button>
+                                        <button type="button" className="btn btn-fill mb-2" onClick={() => { keepData('value', formikProps.values.value, HomeRoutes.Picture) }} disabled={!!formikProps.errors.value}>Siguiente</button>
                                     </div>
                                 </>
                             </Card>
@@ -262,7 +272,7 @@ export const Home = () => {
 
                                     <div className='form-buttons mt-1'>
                                         <button type="button" className="btn btn-outline mb-2" onClick={prevStep}>Atras</button>
-                                        <button type="button" className="btn btn-fill mb-2" onClick={() => { keepData('picture', formikProps.values.picture) }}>Siguiente</button>
+                                        <button type="button" className="btn btn-fill mb-2" onClick={() => { keepData('picture', formikProps.values.picture, HomeRoutes.Elevator) }}>Siguiente</button>
                                     </div>
                                 </>
                             </Card>

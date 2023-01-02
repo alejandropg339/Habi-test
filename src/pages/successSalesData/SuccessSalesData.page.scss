@@ -1,0 +1,9 @@
+@import '../../theme/style-guide.scss';
+
+.success-icon-container {
+    @include center();
+}
+
+.icon{
+    color: $success-color;
+}

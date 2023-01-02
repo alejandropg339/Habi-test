@@ -10,7 +10,9 @@ export const initialStateSales = {
     value: 0,
     picture: null,
     elevator: false,
-    step: 0
+    step: 0,
+    path: '',
+    finished: false
   }
 
 
@@ -19,6 +21,7 @@ export const salesDataSlice = createSlice({
     initialState: initialStateSales,
     reducers:{
         setSalesProperty: (state: any, {payload}) =>{
+            console.log(payload);
             state[payload.name] = payload.value;
         },
         incrementStep:(state) => {
@@ -26,6 +29,12 @@ export const salesDataSlice = createSlice({
         },
         decrementStep:(state) => {
             state.step -=1;
+        },
+        keepPath:(state, {payload}) => {
+            state.path = payload.path; ;
+        },
+        restForm: (state) => {
+            state = initialStateSales;
         }
     }
 })
@@ -33,5 +42,6 @@ export const salesDataSlice = createSlice({
 export const { 
     setSalesProperty,
     incrementStep,
-    decrementStep
+    decrementStep,
+    keepPath
  } = salesDataSlice.actions;
